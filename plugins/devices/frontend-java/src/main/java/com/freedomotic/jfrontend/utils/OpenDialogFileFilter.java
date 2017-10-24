@@ -64,7 +64,7 @@ import javax.swing.filechooser.FileFilter;
 public class OpenDialogFileFilter
         extends FileFilter {
 
-    private Hashtable filters = null;
+    private Hashtable<String, FileFilter> filters = null;
     private String description = null;
     private String fullDescription = null;
     private boolean useExtensionsInDescription = true;
@@ -76,7 +76,7 @@ public class OpenDialogFileFilter
      * @see #addExtension
      */
     public OpenDialogFileFilter() {
-        this.filters = new Hashtable();
+        this.filters = new Hashtable<>();
     }
 
     /**
@@ -159,7 +159,7 @@ public class OpenDialogFileFilter
      * @param f
      * @return
      * @see #getExtension
-     * @see FileFilter#accepts
+     * @see FileFilter#accept
      */
     public boolean accept(File f) {
         if (f != null) {
@@ -213,7 +213,7 @@ public class OpenDialogFileFilter
      */
     public void addExtension(String extension) {
         if (filters == null) {
-            filters = new Hashtable(5);
+            filters = new Hashtable<>(5);
         }
 
         filters.put(extension.toLowerCase(),
@@ -224,30 +224,30 @@ public class OpenDialogFileFilter
     /**
      * Returns the human readable description of this filter. For example: "JPEG
      * and GIF Image Files (*.jpg, *.gif)"
-     *
-     * @return
-     * @see setDescription
-     * @see setExtensionListInDescription
-     * @see isExtensionListInDescription
-     * @see FileFilter#getDescription
      */
     public String getDescription() {
         if (fullDescription == null) {
             if ((description == null) || isExtensionListInDescription()) {
-                fullDescription = (description == null) ? "(" : (description + " (");
+                StringBuilder fullDescriptionBuilder = new StringBuilder();
+                if (description != null) {
+                    fullDescriptionBuilder.append(description).append(' ');
+                }
+
+                fullDescriptionBuilder.append('(');
 
                 // build the description from the extension list
                 Enumeration extensions = filters.keys();
 
                 if (extensions != null) {
-                    fullDescription += ("." + (String) extensions.nextElement());
+                    fullDescriptionBuilder.append('.').append(extensions.nextElement());
 
                     while (extensions.hasMoreElements()) {
-                        fullDescription += (", ." + (String) extensions.nextElement());
+                        fullDescriptionBuilder.append(", .").append(extensions.nextElement());
                     }
                 }
 
-                fullDescription += ")";
+                fullDescriptionBuilder.append(')');
+                fullDescription = fullDescriptionBuilder.toString();
             } else {
                 fullDescription = description;
             }
@@ -259,11 +259,6 @@ public class OpenDialogFileFilter
     /**
      * Sets the human readable description of this filter. For example:
      * filter.setDescription("Gif and JPG Images");
-     *
-     * @param description
-     * @see setDescription
-     * @see setExtensionListInDescription
-     * @see isExtensionListInDescription
      */
     public void setDescription(String description) {
         this.description = description;
@@ -276,11 +271,6 @@ public class OpenDialogFileFilter
      *
      * Only relevent if a description was provided in the constructor or using
      * setDescription();
-     *
-     * @param b
-     * @see getDescription
-     * @see setDescription
-     * @see isExtensionListInDescription
      */
     public void setExtensionListInDescription(boolean b) {
         useExtensionsInDescription = b;
@@ -293,11 +283,6 @@ public class OpenDialogFileFilter
      *
      * Only relevent if a description was provided in the constructor or using
      * setDescription();
-     *
-     * @return
-     * @see getDescription
-     * @see setDescription
-     * @see setExtensionListInDescription
      */
     public boolean isExtensionListInDescription() {
         return useExtensionsInDescription;

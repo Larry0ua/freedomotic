@@ -334,8 +334,8 @@ public class GraphPanel extends javax.swing.JFrame {
         XYItemRenderer r = plot.getRenderer();
         if (r instanceof XYLineAndShapeRenderer) {
             XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) r;
-            renderer.setShapesVisible(true);
-            renderer.setShapesFilled(true);
+            renderer.setBaseShapesVisible(true);
+            renderer.setBaseShapesFilled(true);
         }
 
         // Set date axis style

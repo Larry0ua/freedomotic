@@ -35,7 +35,7 @@ import javax.swing.border.EmptyBorder;
  * @author Enrico Nicoletti
  */
 public class CheckBoxList
-        extends JList {
+        extends JList<JCheckBox> {
 
     /**
      *
@@ -53,7 +53,7 @@ public class CheckBoxList
                 int index = locationToIndex(e.getPoint());
 
                 if (index != -1) {
-                    JCheckBox checkbox = (JCheckBox) getModel().getElementAt(index);
+                    JCheckBox checkbox = getModel().getElementAt(index);
                     checkbox.setSelected(!checkbox.isSelected());
                     repaint();
                 }
@@ -67,20 +67,19 @@ public class CheckBoxList
      *
      */
     protected class CellRenderer
-            implements ListCellRenderer {
+            implements ListCellRenderer<JCheckBox> {
 
         /**
          *
          * @param list
-         * @param value
+         * @param checkbox
          * @param index
          * @param isSelected
          * @param cellHasFocus
          * @return
          */
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+        public Component getListCellRendererComponent(JList list, JCheckBox checkbox, int index, boolean isSelected,
                 boolean cellHasFocus) {
-            JCheckBox checkbox = (JCheckBox) value;
             checkbox.setBackground(isSelected ? getSelectionBackground() : getBackground());
             checkbox.setForeground(isSelected ? getSelectionForeground() : getForeground());
             checkbox.setEnabled(isEnabled());

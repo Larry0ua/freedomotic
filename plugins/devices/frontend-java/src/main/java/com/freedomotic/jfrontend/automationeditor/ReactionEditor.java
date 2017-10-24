@@ -19,26 +19,22 @@
  */
 package com.freedomotic.jfrontend.automationeditor;
 
-import com.freedomotic.app.Freedomotic;
+import com.freedomotic.bus.BusService;
+import com.freedomotic.i18n.I18n;
+import com.freedomotic.nlp.NlpCommand;
 import com.freedomotic.reactions.Command;
+import com.freedomotic.reactions.CommandRepository;
 import com.freedomotic.reactions.Reaction;
 import com.freedomotic.reactions.ReactionRepository;
 import com.freedomotic.reactions.Trigger;
-import com.freedomotic.i18n.I18n;
-import com.freedomotic.nlp.NlpCommand;
-import com.freedomotic.reactions.CommandRepository;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.Box;
-import javax.swing.JButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.*;
 
 /**
  *
@@ -55,6 +51,7 @@ public class ReactionEditor
     private final transient I18n I18n;
     private transient NlpCommand nlpCommands;
     private transient CommandRepository commandRepository;
+    private BusService busService;
     private transient ReactionRepository reactionRepository;
 
     /**
@@ -69,12 +66,14 @@ public class ReactionEditor
      */
     public ReactionEditor(
             I18n i18n,
+            BusService busService,
             NlpCommand nlpCommands,
             CommandRepository commandRepository,
             Reaction reaction,
             Component parent,
             ReactionRepository reactionRepository) {
         this.I18n = i18n;
+        this.busService = busService;
         this.nlpCommands = nlpCommands;
         this.commandRepository = commandRepository;
         this.reactionRepository = reactionRepository;
@@ -115,7 +114,7 @@ public class ReactionEditor
                         trigger.getName()); //the default choice
                 c.setReplyTimeout(Integer.MAX_VALUE);
 
-                Freedomotic.sendCommand(c);
+                busService.send(c);
             }
         });
         this.add(btnTrigger, BorderLayout.WEST);

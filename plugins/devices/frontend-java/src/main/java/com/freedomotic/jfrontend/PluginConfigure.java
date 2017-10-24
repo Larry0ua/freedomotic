@@ -81,6 +81,7 @@ public class PluginConfigure extends javax.swing.JFrame {
 
         api.getClients("plugin").stream()
                 .filter(it -> it instanceof Plugin)
+                .map(it -> (Plugin) it)
                 .forEach(cmbPlugin::addItem);
 
         if (cmbPlugin.getItemCount() > 0) {
@@ -301,7 +302,7 @@ public class PluginConfigure extends javax.swing.JFrame {
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnDefault;
     private javax.swing.JButton btnSave;
-    private javax.swing.JComboBox cmbPlugin;
+    private javax.swing.JComboBox<Plugin> cmbPlugin;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JEditorPane txtArea;
     private javax.swing.JButton uninstallButton;

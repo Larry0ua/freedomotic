@@ -57,7 +57,7 @@ public class LogWindow extends JFrame {
         "WARN",
         "ERROR",
         "OFF",};
-    private JComboBox cmbLevel = new JComboBox(levels);
+    private JComboBox<String> cmbLevel = new JComboBox<>(levels);
     private JTable table = new JTable(model);
     private JTextPane areaDetail = new JTextPane();
     private JToggleButton btnStop = new JToggleButton();
@@ -67,7 +67,7 @@ public class LogWindow extends JFrame {
     /**
      *
      * @param i18n
-     * @param handler
+     * @param printableLogger
      */
     public LogWindow(I18n i18n, final Logger printableLogger) {
         super("Log Window");
@@ -97,7 +97,7 @@ public class LogWindow extends JFrame {
         cmbLevel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	printableLogger.setLevel(org.apache.log4j.Level.toLevel(cmbLevel.getSelectedItem().toString()));
+            	printableLogger.setLevel(org.apache.log4j.Level.toLevel(String.valueOf(cmbLevel.getSelectedItem())));
             }
         });
         add(new JLabel(i18n.msg("log_level") + ": "), BorderLayout.NORTH);

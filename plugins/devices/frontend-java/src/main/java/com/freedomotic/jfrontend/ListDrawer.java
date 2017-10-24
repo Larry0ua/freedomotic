@@ -51,9 +51,9 @@ import javax.swing.SpringLayout;
  */
 public class ListDrawer extends Renderer {
 
-    JComboBox cmbZone = new JComboBox();
-    JPanel panel = new JPanel();
-    Protocol master;
+    private JComboBox<ZoneLogic> cmbZone = new JComboBox<>();
+    private JPanel panel = new JPanel();
+    private Protocol master;
 
     /**
      *
@@ -164,8 +164,8 @@ public class ListDrawer extends Renderer {
         if (obj != null) {
             if ((obj.getCurrentRepresentation().getIcon() != null)
                     && !obj.getCurrentRepresentation().getIcon().equalsIgnoreCase("")) {
-                BufferedImage img = null;
-                img = ResourcesManager.getResource(obj.getCurrentRepresentation().getIcon(),
+                BufferedImage img =
+                    ResourcesManager.getResource(obj.getCurrentRepresentation().getIcon(),
                         48,
                         48); //-1 means no resizeing
 
@@ -184,7 +184,7 @@ public class ListDrawer extends Renderer {
      */
     public void mouseClickObject(EnvObjectLogic obj) {
         ObjectReceiveClick event = new ObjectReceiveClick(this, obj, ObjectReceiveClick.SINGLE_CLICK);
-        Freedomotic.sendEvent(event);
+        master.getBusService().send(event);
     }
 
     /**

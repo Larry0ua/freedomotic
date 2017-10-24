@@ -20,18 +20,15 @@
 package com.freedomotic.jfrontend;
 
 import com.freedomotic.api.API;
-import com.freedomotic.app.Freedomotic;
 import com.freedomotic.settings.Info;
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  *
@@ -60,34 +57,22 @@ public class PrivilegesConfiguration extends javax.swing.JFrame {
     }
 
     private String readConfiguration(File file) {
-
-        StringBuilder buff = new StringBuilder();
-
-        try (FileInputStream fis = new FileInputStream(file);
-                BufferedInputStream bis = new BufferedInputStream(fis);
-                DataInputStream dis = new DataInputStream(bis);) {
-
-            // dis.available() returns 0 if the file does not have more lines.
-            while (dis.available() != 0) {
-
-                // this statement reads the line from the file and print it to
-                // the console.
-                buff.append(dis.readLine()).append("\n");
-            }
+        try {
+            return FileUtils.readFileToString(file, Charset.defaultCharset());
         } catch (FileNotFoundException e) {
-            LOG.error("File \"{}\" not found. A new file will be created", file.getAbsolutePath());
-            Freedomotic.getStackTraceInfo(e);
+            LOG.error("File \"{}\" not found. A new file will be created", file.getAbsolutePath(), e);
         } catch (IOException e) {
-            Freedomotic.getStackTraceInfo(e);
+            LOG.error("IO Exception reading file {}", file.getAbsolutePath(), e);
         }
-        return buff.toString();
+
+        return "";
     }
 
-    private void saveConfiguration(File file, String text) throws IOException {
-        // Create file 
-        try (FileWriter fstream = new FileWriter(file);
-                BufferedWriter out = new BufferedWriter(fstream);) {
-            out.write(text);
+    private void saveConfiguration(File file, String text) {
+        try {
+            FileUtils.writeStringToFile(file, text, Charset.defaultCharset());
+        } catch (IOException ex) {
+            LOG.error("Error writing to file", ex);
         }
     }
 
@@ -160,11 +145,7 @@ public class PrivilegesConfiguration extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        try {
-            saveConfiguration(write, txtArea.getText());
-        } catch (IOException ex) {
-            LOG.error(Freedomotic.getStackTraceInfo(ex));
-        }
+        saveConfiguration(write, txtArea.getText());
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

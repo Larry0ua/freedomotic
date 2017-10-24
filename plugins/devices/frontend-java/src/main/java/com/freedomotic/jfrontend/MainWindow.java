@@ -917,7 +917,7 @@ public class MainWindow
     private void closeFreedomotic() {
         GenericEvent exitSignal = new GenericEvent(this);
         exitSignal.setDestination("app.event.system.exit");
-        Freedomotic.sendEvent(exitSignal);
+        master.getBusService().send(exitSignal);
     }
 
     /**
@@ -1357,7 +1357,7 @@ private void jCheckBoxMarketActionPerformed(java.awt.event.ActionEvent evt) {//G
         possibilities.addAll(api.environments().findAll());
         possibilities.remove(oldenv);
 
-        JComboBox envCombo = new JComboBox(possibilities.toArray());
+        JComboBox<Object> envCombo = new JComboBox<>(possibilities.toArray());
 
         int result = JOptionPane.showConfirmDialog(null,
                 new Object[]{confirmLbl, selectLbl, envCombo},
@@ -1410,17 +1410,18 @@ private void jCheckBoxMarketActionPerformed(java.awt.event.ActionEvent evt) {//G
     private void mnuLanguageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuLanguageActionPerformed
         //JDK 1,7 version: JComboBox<i18n.ComboLanguage> combo = new JComboBox<i18n.ComboLanguage>(I18n.getAvailableLocales());
         //JDK 1.6 version: next line
+        Locale defaultLocale = Locale.getDefault();
         Vector<ComboLanguage> languages = new Vector<ComboLanguage>();
         for (Locale loc : i18n.getAvailableLocales()) {
-            languages.add(new ComboLanguage(loc.getDisplayCountry(i18n.getDefaultLocale()) + " - " + loc.getDisplayLanguage(loc), loc.toString(), loc));
+            languages.add(new ComboLanguage(loc.getDisplayCountry(defaultLocale) + " - " + loc.getDisplayLanguage(loc), loc.toString(), loc));
         }
         Collections.sort(languages);
         languages.add(new ComboLanguage("Automatic", "auto", Locale.ENGLISH));
 
-        JComboBox combo = new JComboBox(languages);
+        JComboBox<ComboLanguage> combo = new JComboBox<>(languages);
 
         for (ComboLanguage cmb : languages) {
-            if (cmb.getValue().equals(i18n.getDefaultLocale())) {
+            if (cmb.getLocale().equals(defaultLocale)) {
                 combo.setSelectedItem(cmb);
                 break;
             }
@@ -1433,8 +1434,10 @@ private void jCheckBoxMarketActionPerformed(java.awt.event.ActionEvent evt) {//G
                 JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
             ComboLanguage selected = (ComboLanguage) combo.getSelectedItem();
-            i18n.setDefaultLocale(selected.getValue());
-            updateStrings();
+            if (selected != null) {
+                i18n.setDefaultLocale(selected.getValue());
+                updateStrings();
+            }
         }
     }//GEN-LAST:event_mnuLanguageActionPerformed
 

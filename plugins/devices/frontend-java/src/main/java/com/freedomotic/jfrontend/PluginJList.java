@@ -54,7 +54,7 @@ import static com.freedomotic.core.ResourcesManager.getResource;
  *
  * @author Enrico Nicoletti
  */
-public final class PluginJList extends JList {
+public final class PluginJList extends JList<JPanel> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PluginJList.class.getName());
     private static final String PLUGIN_TYPE = "plugin";
@@ -136,7 +136,6 @@ public final class PluginJList extends JList {
             mnuConfigure = new JMenuItem("Placeholder menu");
         }
 
-
         mnuConfigure.addActionListener(e1 -> {
             if (PLUGIN_TYPE.equalsIgnoreCase(client.getType())) {
                 client.start();
@@ -178,7 +177,7 @@ public final class PluginJList extends JList {
     public void update() {
         try {
 
-            Vector vector = new Vector();
+            Vector<JPanel> vector = new Vector<>();
             Collection<Client> clients = getApi().getClients(getFilter());
 
             clients.stream()
@@ -187,7 +186,7 @@ public final class PluginJList extends JList {
                     .forEach(vector::add);
 
             setListData(vector);
-            ListCellRenderer renderer = new CustomCellRenderer();
+            ListCellRenderer<Component> renderer = new CustomCellRenderer();
             setCellRenderer(renderer);
         } catch (Exception e) {
             LOG.error(Freedomotic.getStackTraceInfo(e));
@@ -266,11 +265,10 @@ public final class PluginJList extends JList {
         return Optional.ofNullable(getResource(icon, 64, 64));
     }
 
-    class CustomCellRenderer implements ListCellRenderer {
+    class CustomCellRenderer implements ListCellRenderer<Component> {
 
         @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            Component component = (Component) value;
+        public Component getListCellRendererComponent(JList list, Component component, int index, boolean isSelected, boolean cellHasFocus) {
             component.setBackground(isSelected ? list.getSelectionBackground() : getListBackground(list, index));
             component.setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());
 

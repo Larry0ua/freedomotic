@@ -123,7 +123,8 @@ public class ReactionsPanel
 
                 for (Reaction r : reactionRepository.findAll()) {
                     if (r.getTrigger().equals(trigger) && !r.getCommands().isEmpty()) {
-                        ReactionEditor editor = new ReactionEditor(I18n, nlpCommands, commandRepository, r, this, reactionRepository);
+                        ReactionEditor editor = new ReactionEditor(
+                            I18n, plugin.getBusService(), nlpCommands, commandRepository, r, this, reactionRepository);
                         panel.add(editor, pos++);
                         found = true;
                     }
@@ -132,7 +133,8 @@ public class ReactionsPanel
                 if (!found) { //add an empty reaction if none
                     pos = panel.getComponentCount();
 
-                    ReactionEditor editor = new ReactionEditor(I18n, nlpCommands, commandRepository, new Reaction(trigger), this, reactionRepository);
+                    ReactionEditor editor = new ReactionEditor(
+                        I18n, plugin.getBusService(), nlpCommands, commandRepository, new Reaction(trigger), this, reactionRepository);
                     panel.add(editor, pos++);
                 }
 
@@ -171,7 +173,8 @@ public class ReactionsPanel
                     //display already stored reactions related to this objects
                     for (Reaction r : reactionRepository.findAll()) {
                         if (r.getTrigger().equals(trigger)) {
-                            ReactionEditor editor = new ReactionEditor(I18n, nlpCommands, commandRepository, r, this, reactionRepository);
+                            ReactionEditor editor = new ReactionEditor(
+                                I18n, plugin.getBusService(), nlpCommands, commandRepository, r, this, reactionRepository);
                             panel.add(editor);
                             alreadyStored = true;
                         }
@@ -179,7 +182,8 @@ public class ReactionsPanel
 
                     if (!alreadyStored) { //add an empty reaction if none
 
-                        ReactionEditor editor = new ReactionEditor(I18n, nlpCommands, commandRepository, new Reaction(trigger), this, reactionRepository);
+                        ReactionEditor editor = new ReactionEditor(
+                            I18n, plugin.getBusService(), nlpCommands, commandRepository, new Reaction(trigger), this, reactionRepository);
                         panel.add(editor);
                     }
                 }

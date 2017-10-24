@@ -83,7 +83,7 @@ public class CustomizeTrigger
 
         while (it.hasNext()) {
             Statement statement = (Statement) it.next();
-            List list = new ArrayList();
+            List<String> list = new ArrayList<>();
             list.add(statement.getLogical());
             list.add(statement.getAttribute());
             list.add(statement.getOperand());
